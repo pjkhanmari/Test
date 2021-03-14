@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{B4AA128E-434C-4951-6986-A1B9562BD22B}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "LHStudioTest",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
