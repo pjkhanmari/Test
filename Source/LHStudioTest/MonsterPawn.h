@@ -26,4 +26,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void MoveForward();
+	void RotateRandom();
+	void CheckDestroy();
+	
+private:
+	bool DoSweep(const UWorld* World, FVector StartLocation, FVector EndLocation, FRotator Rot, TArray<struct FHitResult> &OutHits);
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
+ 	float m_Velocity = 0.f;
 };

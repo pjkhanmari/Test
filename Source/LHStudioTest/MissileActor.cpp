@@ -15,7 +15,7 @@ AMissileActor::AMissileActor()
 void AMissileActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	bAlreadyStartSuicide = false;
 }
 
 // Called every frame
@@ -23,5 +23,56 @@ void AMissileActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (TargetActor)
+		RotateToTarget(TargetActor->GetActorLocation());
+	else
+	{
+		if(!bAlreadyStartSuicide)
+			StartSuicide();
+	}
+	MoveForward();
+}
+
+void AMissileActor::MoveForward()
+{
+	auto Forward = GetActorForwardVector();
+	SetActorLocation(GetActorLocation() + Forward * m_Velocity);
+}
+
+void AMissileActor::RotateToTarget(FVector TargetPos)
+{
+	RotatePitch(TargetPos);
+	RotateYaw(TargetPos);
+}
+
+void AMissileActor::RotateYaw(FVector TargetPos)
+{
+	auto Location = GetActorLocation();
+	auto Rotation = GetActorRotation();
+	auto TargetVector = TargetPos - Location;
+	float Degree = FMath::RadiansToDegrees(FMath::Atan2(TargetVector.Y, TargetVector.X));
+	SetActorRotation(FRotator(Rotation.Pitch, Degree, Rotation.Roll));
+}
+
+void AMissileActor::RotatePitch(FVector TargetPos)
+{
+	auto Location = GetActorLocation();
+	auto Rotation = GetActorRotation();
+	auto HeightDis = TargetPos.Z - Location.Z;
+	auto WidthDis = (TargetPos - Location).Size2D();
+	float Degree = FMath::RadiansToDegrees(FMath::Atan2(HeightDis, WidthDis));
+	SetActorRotation(FRotator(Degree, Rotation.Yaw, Rotation.Roll));
+}
+
+void AMissileActor::StartSuicide()
+{
+	FTimerHandle Handler;
+	GetWorld()->GetTimerManager().SetTimer(Handler, this, &AMissileActor::Suicide, 0.f, false, SuicideDelay);
+	bAlreadyStartSuicide = true;
+}
+
+void AMissileActor::Suicide()
+{
+	Destroy();
 }
 

@@ -3,3 +3,7 @@
 
 #include "LHStudioTestGameModeBase.h"
 
+void ALHStudioTestGameModeBase::BeginPlay()
+{
+
+}

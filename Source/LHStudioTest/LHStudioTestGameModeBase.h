@@ -14,4 +14,7 @@ class LHSTUDIOTEST_API ALHStudioTestGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	void BeginPlay() override;
+	
 };
