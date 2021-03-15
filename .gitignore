@@ -1,3 +1,7 @@
+# file name extension
+*.sln
+*.txt
+# directory
 .vs/
 Binaries/
 DerivedDataCache/

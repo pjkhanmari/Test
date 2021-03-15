@@ -28,11 +28,13 @@ public:
 
 public:
 	bool Add(ElementType Item);
-	void Delete(int32 Index);
-	void Replace(int32 Index, ElementType Item);
-	void Find(ElementType Item);
+	bool Delete(int32 Index);
+	bool Replace(int32 Index, ElementType Item);
+	int32 FindIndex(ElementType Item);
+	int32 Num();
 
 private:
 	Node<ElementType>* HeadNode;
 	int32 ListSize;
 };
+
