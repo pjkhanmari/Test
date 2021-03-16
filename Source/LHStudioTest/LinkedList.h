@@ -23,8 +23,12 @@ template <class ElementType>
 class LHSTUDIOTEST_API LinkedList
 {
 public:
-	LinkedList();
-	~LinkedList();
+	LinkedList() 
+	{
+		HeadNode = nullptr;
+		ListSize = 0;
+	};
+	~LinkedList() {};
 
 public:
 	bool Add(ElementType Item);

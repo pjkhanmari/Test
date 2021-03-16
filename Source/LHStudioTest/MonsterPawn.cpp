@@ -4,8 +4,6 @@
 #include "MonsterPawn.h"
 #include "Math/UnrealMathUtility.h"
 
-#define LITTLEGAP FVector(0.f, 0.f, 100.f)
-
 // Sets default values
 AMonsterPawn::AMonsterPawn()
 {
@@ -19,20 +17,27 @@ void AMonsterPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	StaticMesh = FindComponentByClass<UStaticMeshComponent>();
+	StaticMesh->OnComponentHit.AddDynamic(this, &AMonsterPawn::OnHit);
 }
 
 // Called every frame
 void AMonsterPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	RotateRandom();
+	MoveForward();
 }
 
 // Called to bind functionality to input
 void AMonsterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
 
+void AMonsterPawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Log, TEXT("Hit Actor Name : %s"), *OtherActor->GetName());
 }
 
 void AMonsterPawn::MoveForward()
@@ -44,37 +49,38 @@ void AMonsterPawn::MoveForward()
 void AMonsterPawn::RotateRandom()
 {
 	TArray<FHitResult> Results;
-	float RandomYaw = FMath::RandRange(-1.f, 1.f);
-	auto World = GetWorld();
 	auto Rotation = GetActorRotation();
-	auto Location = GetActorLocation();
-	if (DoSweep(World, Location, Location - LITTLEGAP, Rotation, Results))
-	{
-	}
+	float RandomYaw = FMath::RandRange(-2.f, 2.f);
+	float RandomPitch = FMath::RandRange(-1.f, 1.f);
+
+	SetActorRotation(Rotation + FRotator(RandomPitch, RandomYaw, 0.f));
 }
 
 void AMonsterPawn::CheckDestroy()
 {
-
+	TArray<FHitResult> Results;
+	auto World = GetWorld();
+	auto Rotation = GetActorRotation();
+	auto Location = GetActorLocation();
 }
 
 bool AMonsterPawn::DoSweep(const UWorld* World, FVector StartLocation, FVector EndLocation, FRotator Rot, TArray<struct FHitResult> &OutHits)
 {
-// 	if (!IsValid(UpdateedPrimitive)) return false;
-// 
-// 	FComponentQueryParams CQP = FComponentQueryParams();
-// 	CQP.AddIgnoredComponent(UpdatedPrimitive);
-// 	CQP.bFindInitialOverlaps = true;
-// 	CQP.bTraceComplex = false;
-// 
-// 	World->ComponentSweepMulti(
-// 		OutHits,			//results
-// 		UpdatedPrimitive,	//Component to sweep
-// 		StartLocation,			//start location
-// 		EndLocation,			//end location
-// 		Rot,
-// 		CQP					//Parameters
-// 	);
+	if (!IsValid(StaticMesh)) return false;
+
+	FComponentQueryParams CQP = FComponentQueryParams();
+	CQP.AddIgnoredComponent(StaticMesh);
+	CQP.bFindInitialOverlaps = true;
+	CQP.bTraceComplex = false;
+
+	World->ComponentSweepMulti(
+		OutHits,			//results
+		StaticMesh,	//Component to sweep
+		StartLocation,			//start location
+		EndLocation,			//end location
+		Rot,
+		CQP					//Parameters
+	);
 	return false;
 }
 

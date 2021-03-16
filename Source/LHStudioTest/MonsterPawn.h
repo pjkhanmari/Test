@@ -25,7 +25,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 	void MoveForward();
 	void RotateRandom();
 	void CheckDestroy();
@@ -36,4 +37,7 @@ private:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
  	float m_Velocity = 0.f;
+
+private:
+	UStaticMeshComponent* StaticMesh;
 };

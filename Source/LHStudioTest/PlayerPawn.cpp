@@ -2,6 +2,8 @@
 
 
 #include "PlayerPawn.h"
+#include "MonsterPawn.h"
+#include "Runtime/Engine/Public/EngineUtils.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -30,5 +32,64 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("MouseRightButton", EInputEvent::IE_Pressed, this, &APlayerPawn::MouseRightButtonPressed);
+	PlayerInputComponent->BindAction("MouseRightButton", EInputEvent::IE_Released, this, &APlayerPawn::MouseRightButtonReleased);
+	PlayerInputComponent->BindAction("Shot", EInputEvent::IE_Released, this, &APlayerPawn::Shot);
+	PlayerInputComponent->BindAxis("LeftRight", this, &APlayerPawn::LeftRight);
+	PlayerInputComponent->BindAxis("UpDown", this, &APlayerPawn::UpDown);
+	PlayerInputComponent->BindAxis("ForwardBackward", this, &APlayerPawn::ForwardBackward);
+	PlayerInputComponent->BindAxis("RotateYaw", this, &APlayerPawn::RotateYaw);
+	PlayerInputComponent->BindAxis("RotatePitch", this, &APlayerPawn::RotatePitch);
+}
+
+void APlayerPawn::LeftRight(float AxisValue)
+{
+	SetActorLocation(GetActorLocation() + GetActorRightVector() * AxisValue * Speed);
+}
+
+void APlayerPawn::UpDown(float AxisValue)
+{
+	SetActorLocation(GetActorLocation() + GetActorUpVector() * AxisValue * Speed);
+}
+
+void APlayerPawn::ForwardBackward(float AxisValue)
+{
+	SetActorLocation(GetActorLocation() + GetActorForwardVector() * AxisValue * Speed);
+}
+
+void APlayerPawn::RotateYaw(float AxisValue)
+{
+	if(MouseRightIsPressed)
+		SetActorRotation(GetActorRotation() + FRotator(0.f, AxisValue, 0.f));
+}
+
+void APlayerPawn::RotatePitch(float AxisValue)
+{
+	if (MouseRightIsPressed)
+		SetActorRotation(GetActorRotation() + FRotator(AxisValue, 0.f, 0.f));
+}
+
+void APlayerPawn::MouseRightButtonPressed()
+{
+	MouseRightIsPressed = true;
+}
+
+void APlayerPawn::MouseRightButtonReleased()
+{
+	MouseRightIsPressed = false;
+}
+
+void APlayerPawn::Shot()
+{
+	AMonsterPawn* TargetMonster = nullptr;
+	for (const auto& entity : TActorRange<AMonsterPawn>(GetWorld()))
+	{
+		TargetMonster = entity;
+	}
+	if (TargetMonster)
+	{
+		auto Missile = GetWorld()->SpawnActor<AMissileActor>(MissileActor, GetActorLocation(), GetActorRotation());
+		Missile->SetTarget(TargetMonster);
+	}
 }
 

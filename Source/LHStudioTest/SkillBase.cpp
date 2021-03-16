@@ -2,11 +2,3 @@
 
 
 #include "SkillBase.h"
-
-SkillBase::SkillBase()
-{
-}
-
-SkillBase::~SkillBase()
-{
-}

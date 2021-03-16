@@ -4,18 +4,6 @@
 #include "LinkedList.h"
 
 template <class ElementType>
-LinkedList<ElementType>::LinkedList()
-{
-	HeadNode = nullptr;
-	ListSize = 0;
-}
-
-template <class ElementType>
-LinkedList<ElementType>::~LinkedList()
-{
-}
-
-template <class ElementType>
 bool LinkedList<ElementType>::Add(ElementType Item)
 {
 	Node<ElementType> *New = new Node<ElementType>;

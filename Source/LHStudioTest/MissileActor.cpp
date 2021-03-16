@@ -2,6 +2,7 @@
 
 
 #include "MissileActor.h"
+#include "MonsterPawn.h"
 
 // Sets default values
 AMissileActor::AMissileActor()
@@ -23,14 +24,14 @@ void AMissileActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	MoveForward();
+
+	if (bAlreadyStartSuicide)
+		return;
 	if (TargetActor)
 		RotateToTarget(TargetActor->GetActorLocation());
 	else
-	{
-		if(!bAlreadyStartSuicide)
-			StartSuicide();
-	}
-	MoveForward();
+ 		StartSuicide();
 }
 
 void AMissileActor::MoveForward()

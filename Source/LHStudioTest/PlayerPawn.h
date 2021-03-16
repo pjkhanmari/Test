@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "MissileActor.h"
 #include "PlayerPawn.generated.h"
 
 UCLASS()
@@ -26,4 +27,28 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	UFUNCTION()
+	void LeftRight(float AxisValue);
+	UFUNCTION()
+	void UpDown(float AxisValue);
+	UFUNCTION()
+	void ForwardBackward(float AxisValue);
+	UFUNCTION()
+	void RotateYaw(float AxisValue);
+	UFUNCTION()
+	void RotatePitch(float AxisValue);
+	UFUNCTION()
+	void MouseRightButtonPressed();
+	UFUNCTION()
+	void MouseRightButtonReleased();
+	UFUNCTION()
+	void Shot();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
+	TSubclassOf<AMissileActor> MissileActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
+	float Speed = 0.f;
+	bool MouseRightIsPressed = false;
 };
