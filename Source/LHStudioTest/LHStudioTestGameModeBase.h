@@ -23,7 +23,7 @@ public:
 	}
 	~FSkill() 
 	{
-		delete Hash;
+		//delete Hash;
 	}
 	friend bool operator == (const FSkill& first, const FSkill& second)
 	{
@@ -42,5 +42,6 @@ class LHSTUDIOTEST_API ALHStudioTestGameModeBase : public AGameModeBase
 	
 public:
 	void BeginPlay() override;
+	void EndPlay(EEndPlayReason::Type reason) override;
 	
 };

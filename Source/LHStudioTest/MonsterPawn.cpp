@@ -9,7 +9,8 @@ AMonsterPawn::AMonsterPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	RootComponent = StaticMesh;
 }
 
 // Called when the game starts or when spawned
@@ -17,8 +18,13 @@ void AMonsterPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	StaticMesh = FindComponentByClass<UStaticMeshComponent>();
-	StaticMesh->OnComponentHit.AddDynamic(this, &AMonsterPawn::OnHit);
+// 	StaticMesh = FindComponentByClass<UStaticMeshComponent>();
+ 	StaticMesh->OnComponentHit.AddDynamic(this, &AMonsterPawn::OnHit);
+}
+
+void AMonsterPawn::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Log, TEXT("Hit Actor Name : %s"), *Other->GetName());
 }
 
 // Called every frame

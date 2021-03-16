@@ -18,3 +18,8 @@ void ALHStudioTestGameModeBase::BeginPlay()
 
 	SB.GetRandom(skill3);
 }
+
+void ALHStudioTestGameModeBase::EndPlay(EEndPlayReason::Type reason)
+{
+	Super::EndPlay(reason);
+}

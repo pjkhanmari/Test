@@ -18,6 +18,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 
 public:	
 	// Called every frame
@@ -37,7 +38,6 @@ private:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
  	float m_Velocity = 0.f;
-
-private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UStaticMeshComponent* StaticMesh;
 };
