@@ -9,7 +9,6 @@ AMissileActor::AMissileActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -28,10 +27,7 @@ void AMissileActor::Tick(float DeltaTime)
 
 	if (bAlreadyStartSuicide)
 		return;
-	if (TargetActor)
-		RotateToTarget(TargetActor->GetActorLocation());
-	else
- 		StartSuicide();
+	RotateToTarget(TargetActor->GetActorLocation());
 }
 
 void AMissileActor::MoveForward()
@@ -65,15 +61,22 @@ void AMissileActor::RotatePitch(FVector TargetPos)
 	SetActorRotation(FRotator(Degree, Rotation.Yaw, Rotation.Roll));
 }
 
+void AMissileActor::SetTarget(AActor* Target)
+{
+	TargetActor = Target;
+	((AMonsterPawn*)Target)->DieEvent.AddDynamic(this, &AMissileActor::StartSuicide);
+}
+
 void AMissileActor::StartSuicide()
 {
 	FTimerHandle Handler;
-	GetWorld()->GetTimerManager().SetTimer(Handler, this, &AMissileActor::Suicide, 0.f, false, SuicideDelay);
+	GetWorld()->GetTimerManager().SetTimer(Handler, this, &AMissileActor::Suicide, SuicideDelay, false, SuicideDelay);
 	bAlreadyStartSuicide = true;
 }
 
 void AMissileActor::Suicide()
 {
+	UE_LOG(LogTemp, Log, TEXT("I am Die : %s"), *GetName());
 	Destroy();
 }
 

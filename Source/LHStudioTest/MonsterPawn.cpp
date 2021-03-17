@@ -19,19 +19,27 @@ void AMonsterPawn::BeginPlay()
 	Super::BeginPlay();
 	
 // 	StaticMesh = FindComponentByClass<UStaticMeshComponent>();
- 	StaticMesh->OnComponentHit.AddDynamic(this, &AMonsterPawn::OnHit);
+// 	StaticMesh->OnComponentHit.AddDynamic(this, &AMonsterPawn::OnHit);
 }
 
 void AMonsterPawn::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Log, TEXT("Hit Actor Name : %s"), *Other->GetName());
+	UE_LOG(LogTemp, Log, TEXT("@@@@ Hit Actor Name : %s"), *Other->GetName());
+	if (DieEvent.IsBound())
+		DieEvent.Broadcast();
+	Destroy();
 }
 
 // Called every frame
 void AMonsterPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	RotateRandom();
+	InternalTickTime += DeltaTime;
+	if (InternalTickTime > 2.f)
+	{
+		InternalTickTime = 0.f;
+		RotateRandom();
+	}
 	MoveForward();
 }
 
@@ -40,11 +48,11 @@ void AMonsterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
-
-void AMonsterPawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
-{
-	UE_LOG(LogTemp, Log, TEXT("Hit Actor Name : %s"), *OtherActor->GetName());
-}
+// 
+// void AMonsterPawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+// {
+// 	UE_LOG(LogTemp, Log, TEXT("Hit Actor Name : %s"), *OtherActor->GetName());
+// }
 
 void AMonsterPawn::MoveForward()
 {

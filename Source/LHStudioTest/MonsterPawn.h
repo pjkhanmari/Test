@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "UObject/NoExportTypes.h"
 #include "MonsterPawn.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDelegate_NoParam);
 
 UCLASS()
 class LHSTUDIOTEST_API AMonsterPawn : public APawn
@@ -26,8 +29,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+// 	UFUNCTION()
+// 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 	void MoveForward();
 	void RotateRandom();
 	void CheckDestroy();
@@ -40,4 +43,8 @@ public:
  	float m_Velocity = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	UStaticMeshComponent* StaticMesh;
+
+	FDelegate_NoParam DieEvent;
+private:
+	float InternalTickTime = 0.f;
 };

@@ -28,10 +28,10 @@ public:
 	void RotateYaw(FVector TargetPos);
 	void RotatePitch(FVector TargetPos);
 
-	FORCEINLINE void SetTarget(AActor* Target) { TargetActor = Target; }
-
-private:
+	void SetTarget(AActor* Target);
+	UFUNCTION()
 	void StartSuicide();
+private:
 	void Suicide();
 
 public:
